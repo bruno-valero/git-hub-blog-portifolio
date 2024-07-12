@@ -10,7 +10,9 @@ export function Link({ children, className, ...props }: LinkProps) {
     <NextLink
       {...props}
       className={cn(
+
         'flex items-end justify-end gap-2 border-b-[1px] border-transparent pb-1 text-12 text-blue hover:border-b-blue',
+
         className || '',
         'text-blue',
       )}
