@@ -1,17 +1,35 @@
-import { GitHubUserResponse } from '@/api/github/user-request'
+
+import { GitHubUserResponse } from '@/api/github/@types/user-request'
+import { envBackend } from '@/env-backend'
+
 
 import { ContributorCard } from './contributor-card'
 
 export async function Footer() {
   const designerResponse = await fetch(
     'https://api.github.com/users/millenakmartins',
+
+    {
+      next: {
+        revalidate: 60 * 10, // 10 minutes
+      },
+    },
+
   )
   const designer = (await designerResponse.json()) as
     | GitHubUserResponse
     | undefined
 
-  const developerResponse = await await fetch(
+
+  const developerResponse = await fetch(
     'https://api.github.com/users/bruno-valero',
+    {
+      next: {
+        revalidate: 60 * 10, // 10 minutes
+      },
+      headers: [['Authorization', `Bearer ${envBackend.GITHUB_AUTH_TOKEN}`]],
+    },
+
   )
 
   const developer = (await developerResponse.json()) as
