@@ -20,7 +20,7 @@ export function FeedCard({ data }: FeedCardProps) {
         className="flex w-full"
       >
         <CardContent className="m-0 flex w-full flex-col gap-5 p-0">
-          <div className="flex w-full items-start justify-between gap-4">
+          <div className="flex w-full items-start justify-between gap-4 max-[550px]:flex-col max-[550px]:justify-start max-[550px]:gap-1">
             <CardTitle className="max-w-[16rem] text-wrap text-20 font-bold leading-8 tracking-wide text-base-title">
               {data.title}
             </CardTitle>
