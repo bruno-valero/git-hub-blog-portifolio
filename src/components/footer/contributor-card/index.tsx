@@ -17,14 +17,14 @@ export function ContributorCard({
   socialUrl,
 }: ContributorCardProps) {
   return (
-    <Link href={socialUrl} target="_blank">
+    <Link href={socialUrl} target="_blank" className="max-[550px]:w-full">
       <Card
         className={cn(
-          'm-0 w-auto rounded-full border-transparent bg-base-profile px-3 py-2',
+          'm-0 w-auto rounded-full border-transparent bg-base-profile px-3 py-2 max-[550px]:flex max-[550px]:w-full max-[550px]:flex-1',
           'hover:bg-gradient-to-r hover:from-base-profile hover:via-blue/20 hover:to-base-profile hover:shadow-[0px_0px_10px_2px_rgba(0,0,0,0.1)] hover:shadow-blue/20',
         )}
       >
-        <CardContent className="m-0 flex w-full items-center justify-center gap-3 p-0">
+        <CardContent className="m-0 flex w-full items-center justify-center gap-3 p-0 max-[550px]:justify-start">
           <img
             src={imageUrl}
             alt=""

@@ -39,7 +39,7 @@ export async function Footer() {
             Contribuidores
           </h2>
         </div>
-        <div className="flex items-center justify-center gap-6">
+        <div className="flex items-center justify-center gap-6 max-[550px]:max-w-[90%] max-[550px]:flex-col max-[550px]:gap-4">
           {designer && (
             <ContributorCard
               {...{
