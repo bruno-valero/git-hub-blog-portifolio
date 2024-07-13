@@ -174,7 +174,7 @@ export async function Home(props: HomeProps) {
 
   return (
     <div className="flex w-full max-w-[100vw] flex-col items-center justify-start">
-      <div className="w-full max-w-[56rem] max-[550px]:max-w-[90%]">
+      <div className="w-full max-w-[56rem] max-[550px]:flex max-[550px]:max-w-[90%] max-[550px]:flex-col max-[550px]:items-center max-[550px]:justify-center">
         <Profile />
         <ScrollArea className="my-8 max-[550px]:flex max-[550px]:max-w-[90%] max-[550px]:items-start max-[550px]:justify-start">
           <div className="my-4 flex w-full items-center justify-center gap-6 max-[550px]:gap-3">
