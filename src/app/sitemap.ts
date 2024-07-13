@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { repos, issues, user } = await getData()
 
   const reposSitemap: MetadataRoute.Sitemap = repos.map((repo) => ({
-    url: `/repo?name=${repo.data.name}&user=${user}`,
+    url: `${url}/repo?name=${repo.data.name}&user=${user}`,
     lastModified: new Date(repo.data.updated_at),
   }))
 
@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const issueId = issue.data.url.split(user)[1].split('/')[3]
 
     return {
-      url: `/issue?user=${user}&repo=${repo}&issueId=${issueId}`,
+      url: `${url}/issue?user=${user}&repo=${repo}&issueId=${issueId}`,
       lastModified: new Date(issue.data.updated_at),
     }
   })
