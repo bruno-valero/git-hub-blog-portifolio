@@ -44,7 +44,7 @@ export async function Profile() {
         />
       </CardHeader>
       <CardContent className="m-0 flex flex-1 flex-col items-start justify-center gap-3 p-0">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between max-[550px]:flex-col max-[550px]:gap-2">
           <CardTitle className="">
             <span className="text-24 font-bold tracking-wide text-white">
               {developer?.name}

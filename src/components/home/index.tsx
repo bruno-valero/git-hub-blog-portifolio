@@ -9,6 +9,7 @@ import { Repos } from '@/api/github/classes/repos'
 import { ServerProps } from '@/app/page'
 
 import { Footer } from '../footer'
+import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import { ChangeSectionButton } from './change-section-button'
 import { Feed, FeedData } from './feed'
 import { Profile } from './profile'
@@ -173,28 +174,33 @@ export async function Home(props: HomeProps) {
 
   return (
     <div className="flex w-full max-w-[100vw] flex-col items-center justify-start">
-      <div className="w-full max-w-[56rem]">
+      <div className="w-full max-w-[56rem] max-[550px]:max-w-[90%]">
         <Profile />
-        <div className="my-10 flex w-full items-center justify-center gap-6">
-          <ChangeSectionButton
-            active={!homeSection || homeSection === 'production'}
-            href="?homeSection=production"
-            icon={faPlay}
-            text="em produção"
-          />
-          <ChangeSectionButton
-            active={homeSection === 'repos'}
-            href="?homeSection=repos"
-            icon={faCode}
-            text="repositórios"
-          />
-          <ChangeSectionButton
-            active={homeSection === 'issues'}
-            href="?homeSection=issues"
-            icon={faCircleXmark}
-            text="issues"
-          />
-        </div>
+        <ScrollArea className="my-8 max-[550px]:flex max-[550px]:max-w-[90%] max-[550px]:items-start max-[550px]:justify-start">
+          <div className="my-4 flex w-full items-center justify-center gap-6 max-[550px]:gap-3">
+            <ChangeSectionButton
+              active={!homeSection || homeSection === 'production'}
+              href="?homeSection=production"
+              icon={faPlay}
+              text="em produção"
+            />
+            <ChangeSectionButton
+              active={homeSection === 'repos'}
+              href="?homeSection=repos"
+              icon={faCode}
+              text="repositórios"
+            />
+            <ChangeSectionButton
+              active={homeSection === 'issues'}
+              href="?homeSection=issues"
+              icon={faCircleXmark}
+              text="issues"
+            />
+          </div>
+
+          <ScrollBar orientation="horizontal" className="" />
+        </ScrollArea>
+
         <Feed data={data} />
       </div>
       <Footer />

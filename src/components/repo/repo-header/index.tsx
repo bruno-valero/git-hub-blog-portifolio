@@ -29,11 +29,15 @@ export async function RepoHeader({ repo }: RepoHeaderProps) {
     <MainCard>
       <div className="flex w-full flex-col gap-6">
         <CardHeader className="m-0 flex w-full flex-row items-center justify-between p-0">
-          <Link href={'/'} className="">
+          <Link href={'/'} className="mt-2 flex items-center justify-center">
             <FontAwesomeIcon icon={faChevronLeft} className="h-3 w-3" />
             <span className="leading-[.50rem]">VOLTAR</span>
           </Link>
-          <Link href={repo?.data.html_url ?? ''} target="_blank" className="">
+          <Link
+            href={repo?.data.html_url ?? ''}
+            target="_blank"
+            className="flex items-center justify-center"
+          >
             <span className="leading-[.50rem]">VER NO GITHUB</span>
             <FontAwesomeIcon
               icon={faArrowUpRightFromSquare}
@@ -48,7 +52,7 @@ export async function RepoHeader({ repo }: RepoHeaderProps) {
             </span>
           </CardTitle>
 
-          <CardFooter className="m-0 mt-6 flex items-center justify-start gap-6 p-0">
+          <CardFooter className="m-0 mt-6 flex items-center justify-start gap-6 p-0 max-[550px]:flex-col max-[550px]:items-start max-[550px]:gap-3">
             <span className="flex items-center justify-center gap-2 text-16 text-base-subtitle">
               <FontAwesomeIcon
                 icon={faGithub}
