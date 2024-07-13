@@ -1,7 +1,5 @@
-
 import { GitHubUserResponse } from '@/api/github/@types/user-request'
 import { envBackend } from '@/env-backend'
-
 
 import { ContributorCard } from './contributor-card'
 
@@ -14,12 +12,10 @@ export async function Footer() {
         revalidate: 60 * 10, // 10 minutes
       },
     },
-
   )
   const designer = (await designerResponse.json()) as
     | GitHubUserResponse
     | undefined
-
 
   const developerResponse = await fetch(
     'https://api.github.com/users/bruno-valero',
@@ -29,7 +25,6 @@ export async function Footer() {
       },
       headers: [['Authorization', `Bearer ${envBackend.GITHUB_AUTH_TOKEN}`]],
     },
-
   )
 
   const developer = (await developerResponse.json()) as

@@ -6,9 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-
 import { GitHubUserResponse } from '@/api/github/@types/user-request'
-
 import { MainCard } from '@/components/main-card'
 import {
   CardContent,
@@ -17,7 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-
 import { envBackend } from '@/env-backend'
 
 import { Link } from '../../link'
@@ -37,12 +34,10 @@ export async function Profile() {
     | GitHubUserResponse
     | undefined
 
-
   return (
     <MainCard>
       <CardHeader className="m-0 p-0">
         <img
-
           src={developer?.avatar_url}
           alt={developer?.name}
           className="max-h-[9.25rem] max-w-[9.25rem] rounded-[.5rem] object-cover"
@@ -57,7 +52,6 @@ export async function Profile() {
           </CardTitle>
 
           <Link href={developer?.url ?? ''} target="_blank" className="">
-
             <span className="leading-[.50rem]">GITHUB</span>
             <FontAwesomeIcon
               icon={faArrowUpRightFromSquare}
@@ -68,7 +62,6 @@ export async function Profile() {
 
         <CardDescription className="m-0 p-0">
           <span className="text-16 text-base-text">{developer?.bio}</span>
-
         </CardDescription>
 
         <CardFooter className="m-0 mt-6 flex items-center justify-start gap-6 p-0">
@@ -101,7 +94,6 @@ export async function Profile() {
               </span>
             </span>
           )}
-
         </CardFooter>
       </CardContent>
     </MainCard>

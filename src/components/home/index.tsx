@@ -4,17 +4,14 @@ import {
   faPlay,
 } from '@fortawesome/free-solid-svg-icons'
 
-
 import { Issues } from '@/api/github/classes/issues'
 import { Repos } from '@/api/github/classes/repos'
 import { ServerProps } from '@/app/page'
-
 
 import { Footer } from '../footer'
 import { ChangeSectionButton } from './change-section-button'
 import { Feed, FeedData } from './feed'
 import { Profile } from './profile'
-
 
 interface HomeProps {
   serverProps: ServerProps
@@ -174,14 +171,12 @@ export async function Home(props: HomeProps) {
     (a, b) => b.date.getTime() - a.date.getTime(),
   )
 
-
   return (
     <div className="flex w-full max-w-[100vw] flex-col items-center justify-start">
       <div className="w-full max-w-[56rem]">
         <Profile />
         <div className="my-10 flex w-full items-center justify-center gap-6">
           <ChangeSectionButton
-
             active={!homeSection || homeSection === 'production'}
             href="?homeSection=production"
             icon={faPlay}
@@ -199,7 +194,6 @@ export async function Home(props: HomeProps) {
             icon={faCircleXmark}
             text="issues"
           />
-
         </div>
         <Feed data={data} />
       </div>
