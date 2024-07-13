@@ -24,34 +24,38 @@ export function MarkdownContent({ data }: MarkdownContentProps) {
         rehypePlugins={[rehypeKatex]}
         components={{
           a: ({ href, children, ...props }) => (
-            <span className="flex items-start justify-start">
+            <span className="inline">
               <Link
                 {...props}
                 href={href ?? ''}
                 target="_blank"
-                className="mt-1 pb-1 text-14 leading-[.5rem] text-base-text"
+                className="mt-1 inline pb-0 text-14 leading-[.5rem] text-base-text"
               >
                 {children}
               </Link>
             </span>
           ),
           p: (props) => (
-            <p
+            <p {...props} className="my-1 text-wrap text-16 text-base-text" />
+          ),
+          span: (props) => (
+            <span
               {...props}
-              className="my-1 flex items-center justify-start gap-2 text-14 text-base-text"
+              className="my-1 text-wrap text-16 text-base-text"
             />
+          ),
+          img: (props) => (
+            <img {...props} alt="" className="my-3 text-14 text-base-text" />
           ),
           ul: (props) => (
             <ul
               {...props}
-              className="my-6 ml-6 list-disc text-14 text-base-text"
+              className="cla my-2 ml-5 flex list-disc flex-col text-14 text-base-text"
             />
           ),
           li: ({ children, ...props }) => (
             <li {...props} className="text-14 text-base-text">
-              <div className="flex items-center justify-start gap-2">
-                {children}
-              </div>
+              {children}
             </li>
           ),
           h1: (props) => (
@@ -70,6 +74,12 @@ export function MarkdownContent({ data }: MarkdownContentProps) {
             <h3
               {...props}
               className="my-4 py-1 text-18 font-semibold tracking-wide text-base-title"
+            />
+          ),
+          h4: (props) => (
+            <h4
+              {...props}
+              className="my-4 py-1 text-16 font-semibold tracking-wide text-base-title"
             />
           ),
           input: ({ type, ...props }) =>

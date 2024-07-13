@@ -1,10 +1,10 @@
 import { envBackend } from '@/env-backend'
 
+import { GitHubBlobResponse } from '../@types/blob-request'
 import { GitHubBranchResponse } from '../@types/branch-request'
 import { GitHubBranchesResponse } from '../@types/branches-request'
-import { GitHubCommitResponse } from '../@types/commit-request'
 import { GitHubReposResponse } from '../@types/repos-request'
-import { Commit } from './commit'
+import { GitHubTreeResponse } from '../@types/tree-request'
 
 export class Repo {
   #data: GitHubReposResponse[number]
@@ -43,7 +43,6 @@ export class Repo {
     const hasMaster = branches.find((branch) => branch.name === master)
 
     const branchToFetch = hasMain ?? hasMaster
-
     if (!branchToFetch) return null
 
     const branchResp = await fetch(
@@ -58,29 +57,50 @@ export class Repo {
 
     const branch = (await branchResp.json()) as GitHubBranchResponse | undefined
 
-    if (!branch) return null
+    const treeUrl = branch?.commit.commit.tree.url
 
-    const commitUrl = branch.commit.parents[0]?.url || branch.commit.url
+    if (!treeUrl) return null
 
-    const commitDataResp = await fetch(commitUrl, {
+    const treeResp = await fetch(treeUrl, {
       next: {
         revalidate: 60 * 10, // 10 minutes
       },
       headers: [['Authorization', `Bearer ${envBackend.GITHUB_AUTH_TOKEN}`]],
     })
-    const commitData = (await commitDataResp.json()) as
-      | GitHubCommitResponse
+
+    const treeData = (await treeResp.json()) as GitHubTreeResponse | undefined
+
+    if (!treeData) return null
+
+    return treeData
+  }
+
+  async getFile(
+    filename: string,
+    branches: [string, string] = ['main', 'master'],
+  ) {
+    const treeData = await this.getBranch(branches)
+
+    const readme = treeData?.tree.find((item) => filename === item.path)
+
+    if (!readme) return null
+
+    const readmeBlobResp = await fetch(readme.url, {
+      next: {
+        revalidate: 60 * 10, // 10 minutes
+      },
+      headers: [['Authorization', `Bearer ${envBackend.GITHUB_AUTH_TOKEN}`]],
+    })
+
+    const readmeBlob = (await readmeBlobResp.json()) as
+      | GitHubBlobResponse
       | undefined
 
-    if (!commitData) return null
+    if (!readmeBlob) return null
 
-    const commit = new Commit(commitData)
+    const data = Buffer.from(readmeBlob.content, 'base64').toString('utf-8')
 
-    const content = await Promise.all(
-      commit.files.map(async (file) => await file.getContent()),
-    )
-
-    return content
+    return { data, metadata: { tree: readme, blob: readmeBlob } }
   }
 }
 
