@@ -11,6 +11,26 @@ export const metadata: Metadata = {
     template: '%s | Bruno Valero',
   },
   description: 'Sites e sistemas para web',
+  authors: [
+    { name: 'Bruno Fernandes Valero', url: 'https://github.com/bruno-valero' },
+  ],
+  creator: 'Bruno Fernandes Valero',
+  keywords: [
+    'Bruno Valero',
+    'Bruno Fernandes Valero',
+    'github',
+    'git hub',
+    'blog',
+    'node',
+    'nodejs',
+    'node js',
+    'react',
+    'reactjs',
+    'react js',
+    'next',
+    'nextjs',
+    'next js',
+  ],
 }
 
 export default function RootLayout({
