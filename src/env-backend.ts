@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 const envSchema = z.object({
   GITHUB_AUTH_TOKEN: z.string(),
+  BASE_URL: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)
