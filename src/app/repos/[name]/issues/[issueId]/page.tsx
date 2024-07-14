@@ -46,9 +46,7 @@ export async function generateMetadata(props: ServerProps) {
   )
 
   const metadata: Metadata = {
-    metadataBase: new URL(
-      `${envBackend.BASE_URL}/repos/${repo}/issues/${issueId}`,
-    ),
+    metadataBase: new URL(`${envBackend.BASE_URL}`),
     title: issue.data.title,
     description: formatMarkdownToText(issue.content)
       .slice(0, 150)
