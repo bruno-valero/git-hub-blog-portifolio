@@ -3,6 +3,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'
 
+import { envBackend } from '@/env-backend'
+
 const nunito = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -31,6 +33,11 @@ export const metadata: Metadata = {
     'nextjs',
     'next js',
   ],
+  openGraph: {
+    description: 'Sites e sistemas para web',
+    title: 'Bruno Valero',
+    images: [`${envBackend.BASE_URL}/api/og`],
+  },
 }
 
 export default function RootLayout({
