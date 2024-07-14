@@ -6,14 +6,16 @@ import { envBackend } from '@/env-backend'
 
 export const runtime = 'edge'
 
-export const alt = 'About Acme'
-export const size = {
-  width: 1200,
-  height: 630,
-}
-export const contentType = 'image/png'
+export const revalidate = 60 * 10 // 10 minutes
 
-export default async function Image() {
+type GenerateImageMetadataResp = {
+  id: string
+  alt: string
+  size: { width: number; height: number }
+  contentType: string
+}[]
+
+export async function generateImageMetadata(): Promise<GenerateImageMetadataResp> {
   const developerResponse = await fetch(
     'https://api.github.com/users/bruno-valero',
     {
@@ -28,6 +30,19 @@ export default async function Image() {
     | GitHubUserResponse
     | undefined
 
+  const imageMetadata: GenerateImageMetadataResp[number] = {
+    id: JSON.stringify(developer),
+    size: { width: 1200, height: 630 },
+    alt: 'Bruno Valero',
+    contentType: 'image/png',
+  }
+
+  return [imageMetadata]
+}
+
+export default async function Image({ params }: { params: { id: string } }) {
+  const developer = JSON.parse(params.id) as GitHubUserResponse | undefined
+
   if (!developer) return new Response('failed to generate og', { status: 500 })
 
   return new ImageResponse(
@@ -41,8 +56,5 @@ export default async function Image() {
         }}
       />
     ),
-    {
-      ...size,
-    },
   )
 }

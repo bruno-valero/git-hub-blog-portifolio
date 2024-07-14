@@ -8,6 +8,7 @@ import { envBackend } from '@/env-backend'
 const nunito = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(envBackend.BASE_URL),
   title: {
     default: 'Bruno Valero',
     template: '%s | Bruno Valero',
@@ -36,7 +37,6 @@ export const metadata: Metadata = {
   openGraph: {
     description: 'Sites e sistemas para web',
     title: 'Bruno Valero',
-    images: [`${envBackend.BASE_URL}/api/og`],
   },
 }
 
