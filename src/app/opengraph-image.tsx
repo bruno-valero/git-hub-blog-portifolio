@@ -30,7 +30,7 @@ export async function generateImageMetadata(): Promise<GenerateImageMetadataResp
 
   const imageMetadata: GenerateImageMetadataResp[number] = {
     id: JSON.stringify(developer),
-    size: { width: 896, height: 220 },
+    size: { width: 1200, height: 630 },
     alt: 'Bruno Valero',
     contentType: 'image/png',
   }
@@ -54,9 +54,5 @@ export default async function Image({ params }: { params: { id: string } }) {
         }}
       />
     ),
-    {
-      width: 1200,
-      height: 630,
-    },
   )
 }
