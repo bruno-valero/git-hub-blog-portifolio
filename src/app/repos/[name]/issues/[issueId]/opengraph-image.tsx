@@ -2,7 +2,8 @@ import { ImageResponse } from 'next/og'
 
 import { GitHubReposIssuesResponse } from '@/api/github/@types/issues-request'
 import { Issue } from '@/api/github/classes/issues'
-import { IssueHeader } from '@/components/issue/issue-header'
+import { GitHubUserResponse } from '@/api/github/user-request'
+import { OpenGraphIssueHeader } from '@/components/open-graph/open-graph-issue-header'
 import { envBackend } from '@/env-backend'
 
 import { ServerProps } from '../../../../page'
@@ -49,8 +50,32 @@ export default async function Image({ params }: { params: { id: string } }) {
   const issueData = JSON.parse(params.id) as GitHubReposIssuesResponse[number]
   const issue = new Issue(issueData)
 
-  return new ImageResponse(<IssueHeader issue={issue} />, {
-    height: 220,
-    width: 864,
-  })
+  if (!issue) return new Response('failed to generate og', { status: 500 })
+
+  const developerResponse = await fetch(
+    'https://api.github.com/users/bruno-valero',
+  )
+
+  const developer = (await developerResponse.json()) as
+    | GitHubUserResponse
+    | undefined
+
+  if (!developer) return new Response('failed to generate og', { status: 500 })
+
+  return new ImageResponse(
+    (
+      <OpenGraphIssueHeader
+        {...{
+          author: developer.name,
+          title: issue.data.title,
+          createdAt: new Date(issue.data.created_at),
+          comments: issue.data.comments,
+        }}
+      />
+    ),
+    {
+      width: 1200,
+      height: 630,
+    },
+  )
 }

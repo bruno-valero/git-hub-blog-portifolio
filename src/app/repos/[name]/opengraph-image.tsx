@@ -2,7 +2,8 @@ import { ImageResponse } from 'next/og'
 
 import { Repo } from '@/api/github/classes/repos'
 import { GitHubReposResponse } from '@/api/github/repos-request'
-import { RepoHeader } from '@/components/repo/repo-header'
+import { GitHubUserResponse } from '@/api/github/user-request'
+import { OpenGraphRepoHeader } from '@/components/open-graph/open-graph-repo-header'
 import { envBackend } from '@/env-backend'
 
 import { ServerProps } from '../../page'
@@ -47,8 +48,32 @@ export default async function Image({ params }: { params: { id: string } }) {
   const repoData = JSON.parse(params.id) as GitHubReposResponse[number]
   const repo = new Repo(repoData)
 
-  return new ImageResponse(<RepoHeader repo={repo} />, {
-    height: 220,
-    width: 864,
-  })
+  if (!repo) return new Response('failed to generate og', { status: 500 })
+
+  const developerResponse = await fetch(
+    'https://api.github.com/users/bruno-valero',
+  )
+
+  const developer = (await developerResponse.json()) as
+    | GitHubUserResponse
+    | undefined
+
+  if (!developer) return new Response('failed to generate og', { status: 500 })
+
+  return new ImageResponse(
+    (
+      <OpenGraphRepoHeader
+        {...{
+          author: developer.name,
+          branch: repo.data.default_branch,
+          createdAt: new Date(repo.data.created_at),
+          title: repo.name,
+        }}
+      />
+    ),
+    {
+      width: 1200,
+      height: 630,
+    },
+  )
 }
