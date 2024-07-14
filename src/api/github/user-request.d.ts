@@ -23,7 +23,7 @@ export type GitHubUserResponse = {
   location: string
   email: null
   hireable: null
-  bio: null
+  bio: string | null
   twitter_username: null
   public_repos: number
   public_gists: number

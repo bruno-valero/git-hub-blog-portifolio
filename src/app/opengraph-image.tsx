@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 import { GitHubUserResponse } from '@/api/github/user-request'
-import { Profile } from '@/components/home/profile'
+import { OpenGraphMainHeader } from '@/components/open-graph/open-graph-main-header'
 import { envBackend } from '@/env-backend'
 
 export const revalidate = 60 * 10 // 10 minutes
@@ -41,8 +41,22 @@ export async function generateImageMetadata(): Promise<GenerateImageMetadataResp
 export default async function Image({ params }: { params: { id: string } }) {
   const developer = JSON.parse(params.id) as GitHubUserResponse | undefined
 
-  return new ImageResponse(<Profile developer={developer} />, {
-    height: 220,
-    width: 864,
-  })
+  if (!developer) return new Response('failed to generate og', { status: 500 })
+
+  return new ImageResponse(
+    (
+      <OpenGraphMainHeader
+        {...{
+          description: developer.bio,
+          followers: developer.followers,
+          imageUrl: developer.avatar_url,
+          name: developer.name,
+        }}
+      />
+    ),
+    {
+      width: 1200,
+      height: 630,
+    },
+  )
 }
