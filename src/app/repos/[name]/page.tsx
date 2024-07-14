@@ -7,6 +7,7 @@ import { ServerProps } from '@/app/page'
 import { Header } from '@/components/header'
 import { RepoComponent } from '@/components/repo'
 import { envBackend } from '@/env-backend'
+import { formatMarkdownToText } from '@/lib/format-markdown-to-text'
 import { formatNameFromSlug } from '@/lib/format-name-from-slug'
 
 export const revalidate = 60 * 10 // 10 minutes
@@ -30,19 +31,21 @@ export async function generateMetadata(props: ServerProps) {
 
   const repo = new Repo(repoData)
 
-  console.log('repo.data?.owner?.login', repo.data?.owner?.login)
   if (!repo.data?.owner?.login) {
     notFound()
   }
+  console.log('repo.data.description', repo.data.description)
+  console.log(
+    'formatMarkdownToText(repo.data.description)',
+    formatMarkdownToText(repo.data.description ?? ''),
+  )
 
   const metadata: Metadata = {
     metadataBase: new URL(`${envBackend.BASE_URL}/repos/${repo}`),
     title: repo.name,
-    description:
-      repo.data.description
-        ?.replaceAll(/\]\(.+\)|\[/g, '')
-        .slice(0, 150)
-        .concat(' ...') ?? `Repositório do github de ${repo.name}`,
+    description: repo.data.description
+      ? formatMarkdownToText(repo.data.description).slice(0, 150).concat(' ...')
+      : 'Este repositório não possui descrição',
     authors: [
       {
         name: formatNameFromSlug(repo.data.owner.login),
@@ -53,8 +56,7 @@ export async function generateMetadata(props: ServerProps) {
     keywords: [repo.name],
     openGraph: {
       description: repo.data.description
-        ? repo.data.description
-            ?.replaceAll(/\]\(.+\)|\[/g, '')
+        ? formatMarkdownToText(repo.data.description)
             .slice(0, 150)
             .concat(' ...')
         : 'Este repositório não possui descrição',
