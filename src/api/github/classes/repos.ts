@@ -1,4 +1,5 @@
 import { envBackend } from '@/env-backend'
+import { formatNameFromSlug } from '@/lib/format-name-from-slug'
 
 import { GitHubBlobResponse } from '../@types/blob-request'
 import { GitHubBranchResponse } from '../@types/branch-request'
@@ -14,11 +15,9 @@ export class Repo {
   }
 
   get name() {
-    const name = this.data.name
-      .replaceAll(/[-_]/gi, ' ')
-      .split(' ')
-      .map((item) => `${item[0].toUpperCase()}${item.slice(1)}`)
-      .join(' ')
+    if (!this.data.name) return ''
+
+    const name = formatNameFromSlug(this.data.name)
 
     return name
   }

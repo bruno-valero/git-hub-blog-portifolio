@@ -6,7 +6,9 @@ import {
 
 import { Issues } from '@/api/github/classes/issues'
 import { Repos } from '@/api/github/classes/repos'
+import { GitHubUserResponse } from '@/api/github/user-request'
 import { ServerProps } from '@/app/page'
+import { envBackend } from '@/env-backend'
 
 import { Footer } from '../footer'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
@@ -34,7 +36,7 @@ export async function Home(props: HomeProps) {
           date: new Date(item.data.created_at),
           description: item.data.description ?? 'Não há descrição',
           title: item.name,
-          href: `/repo?name=${item.data.name}&user=${user}`,
+          href: `/repos/${item.data.name}`,
         }
       })
 
@@ -62,9 +64,12 @@ export async function Home(props: HomeProps) {
         const issueId = item.data.url.split(user)[1].split('/')[3]
         return {
           date: new Date(item.data.created_at),
-          description: item.data.body.slice(0, 80).concat(' ...'),
+          description: item.data.body
+            .replaceAll(/\]\(.+\)|\[/g, '')
+            .slice(0, 150)
+            .concat(' ...'),
           title: item.data.title,
-          href: `/issue?user=${user}&repo=${repo}&issueId=${issueId}`,
+          href: `/repos/${repo}/issues/${issueId}`,
         }
       })
 
@@ -84,6 +89,20 @@ export async function Home(props: HomeProps) {
     }
   }
 
+  const developerResponse = await fetch(
+    'https://api.github.com/users/bruno-valero',
+    {
+      next: {
+        revalidate: 60 * 10, // 10 minutes
+      },
+      headers: [['Authorization', `Bearer ${envBackend.GITHUB_AUTH_TOKEN}`]],
+    },
+  )
+
+  const developer = (await developerResponse.json()) as
+    | GitHubUserResponse
+    | undefined
+
   const data = (await getData(homeSection ?? 'production')).sort(
     (a, b) => b.date.getTime() - a.date.getTime(),
   )
@@ -91,7 +110,7 @@ export async function Home(props: HomeProps) {
   return (
     <div className="flex w-full max-w-[100vw] flex-col items-center justify-start">
       <div className="w-full max-w-[56rem] max-[550px]:flex max-[550px]:max-w-[90%] max-[550px]:flex-col max-[550px]:items-center max-[550px]:justify-center">
-        <Profile />
+        <Profile developer={developer} />
         <ScrollArea className="my-8 max-[550px]:flex max-[550px]:max-w-[90%] max-[550px]:items-start max-[550px]:justify-start">
           <div className="my-4 flex w-full items-center justify-center gap-6 max-[550px]:gap-3">
             <ChangeSectionButton

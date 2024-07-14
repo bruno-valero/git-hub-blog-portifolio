@@ -1,6 +1,8 @@
 import { Header } from '@/components/header'
 import { Home } from '@/components/home'
 
+export const revalidate = 60 * 10 // 10 minutes
+
 export type ServerProps = {
   params: Record<string, string | undefined>
   searchParams: Record<string, string | undefined>

@@ -1,17 +1,19 @@
 import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
 import { GitHubReposIssuesResponse } from '@/api/github/@types/issues-request'
 import { Issue } from '@/api/github/classes/issues'
+import { ServerProps } from '@/app/page'
 import { Header } from '@/components/header'
 import { IssueComponent } from '@/components/issue'
 import { envBackend } from '@/env-backend'
+import { formatNameFromSlug } from '@/lib/format-name-from-slug'
 
-import { ServerProps } from '../page'
+export const revalidate = 60 * 10 // 10 minutes
 
 export async function generateMetadata(props: ServerProps) {
-  const user = props.searchParams.user
-  const repo = props.searchParams.repo
-  const issueId = props.searchParams.issueId
+  const user = 'bruno-valero'
+  const { name: repo, issueId } = props.params
 
   const resp = await fetch(
     `https://api.github.com/repos/${user}/${repo}/issues/${issueId}`,
@@ -24,33 +26,47 @@ export async function generateMetadata(props: ServerProps) {
   )
   const issueData = (await resp.json()) as GitHubReposIssuesResponse[number]
 
+  if (!issueData) {
+    notFound()
+  }
+
   const issue = new Issue(issueData)
 
-  function titleFromSlug(slug: string) {
-    return slug
-      .replaceAll(/[-_]/gi, ' ')
-      .split(' ')
-      .map((item) => `${item[0].toUpperCase()}${item.slice(1)}`)
-      .join(' ')
+  if (!issue.content) {
+    notFound()
   }
+  console.log('issue.content - data', issue.content)
 
   const metadata: Metadata = {
     title: issue.data.title,
-    description: issue.content.slice(0, 50).concat(' ...'),
+    description: issue.content
+      .replaceAll(/\]\(.+\)|\[/g, '')
+      .slice(0, 150)
+      .concat(' ...'),
     authors: [
       {
-        name: titleFromSlug(issue.data.user.login),
+        name: formatNameFromSlug(issue.data.user.login),
         url: issue.data.user.html_url,
       },
     ],
+    creator: formatNameFromSlug(issue.data.user.login),
+    keywords: [formatNameFromSlug(issue.data.title)],
+    openGraph: {
+      authors: [formatNameFromSlug(issue.data.user.login)],
+      creators: [formatNameFromSlug(issue.data.user.login)],
+      description: issue.content
+        .replaceAll(/\]\(.+\)|\[/g, '')
+        .slice(0, 150)
+        .concat(' ...'),
+      url: `${envBackend.BASE_URL}/issue?user=${user}&repo=${repo}&issueId=${issueId}`,
+    },
   }
   return metadata
 }
 
-export default async function RepoPage(props: ServerProps) {
-  const user = props.searchParams.user
-  const repo = props.searchParams.repo
-  const issueId = props.searchParams.issueId
+export default async function IssuePage(props: ServerProps) {
+  const user = 'bruno-valero'
+  const { name: repo, issueId } = props.params
 
   const resp = await fetch(
     `https://api.github.com/repos/${user}/${repo}/issues/${issueId}`,
@@ -63,7 +79,15 @@ export default async function RepoPage(props: ServerProps) {
   )
   const issueData = (await resp.json()) as GitHubReposIssuesResponse[number]
 
+  if (!issueData) {
+    notFound()
+  }
+
   const issue = new Issue(issueData)
+
+  if (!issue.content) {
+    notFound()
+  }
 
   return (
     <main className="flex min-h-screen w-full max-w-[100vw] flex-col items-start justify-start">
