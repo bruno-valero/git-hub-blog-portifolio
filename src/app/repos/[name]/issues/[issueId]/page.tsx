@@ -7,6 +7,7 @@ import { ServerProps } from '@/app/page'
 import { Header } from '@/components/header'
 import { IssueComponent } from '@/components/issue'
 import { envBackend } from '@/env-backend'
+import { formatMarkdownToText } from '@/lib/format-markdown-to-text'
 import { formatNameFromSlug } from '@/lib/format-name-from-slug'
 
 export const revalidate = 60 * 10 // 10 minutes
@@ -49,8 +50,7 @@ export async function generateMetadata(props: ServerProps) {
       `${envBackend.BASE_URL}/repos/${repo}/issues/${issueId}`,
     ),
     title: issue.data.title,
-    description: issue.content
-      .replaceAll(/\]\(.+\)|\[/g, '')
+    description: formatMarkdownToText(issue.content)
       .slice(0, 150)
       .concat(' ...'),
     authors: [
@@ -62,8 +62,7 @@ export async function generateMetadata(props: ServerProps) {
     creator: formatNameFromSlug(issue.data.user.login),
     keywords: [formatNameFromSlug(issue.data.title)],
     openGraph: {
-      description: issue.content
-        .replaceAll(/\]\(.+\)|\[/g, '')
+      description: formatMarkdownToText(issue.content)
         .slice(0, 150)
         .concat(' ...'),
       title: `${issue.data.title} - Issue do repositório ${formatNameFromSlug(repo)}`,
