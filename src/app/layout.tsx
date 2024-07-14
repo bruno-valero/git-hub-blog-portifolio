@@ -48,6 +48,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta
+        name="google-site-verification"
+        content="LPgWtgxa1ZRkOv72D8NwqzynmzqrasRtWDDFF30wn1A"
+      />
       <body
         className={`${nunito.className} max-w-[100vw] overflow-y-auto overflow-x-hidden bg-base-background leading-default`}
       >
