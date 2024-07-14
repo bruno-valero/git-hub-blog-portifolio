@@ -36,6 +36,7 @@ export async function generateMetadata(props: ServerProps) {
   }
 
   const metadata: Metadata = {
+    metadataBase: new URL(`${envBackend.BASE_URL}/repos/${repo}`),
     title: repo.name,
     description:
       repo.data.description
@@ -50,6 +51,15 @@ export async function generateMetadata(props: ServerProps) {
     ],
     creator: formatNameFromSlug(repo.data.owner.login),
     keywords: [repo.name],
+    openGraph: {
+      description: repo.data.description
+        ? repo.data.description
+            ?.replaceAll(/\]\(.+\)|\[/g, '')
+            .slice(0, 150)
+            .concat(' ...')
+        : 'Este repositório não possui descrição',
+      title: `${repo.name} - Repositório de Bruno Fernandes Valero`,
+    },
   }
   return metadata
 }
