@@ -15,25 +15,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { envBackend } from '@/env-backend'
 
 import { Link } from '../../link'
 
-export async function Profile() {
-  const developerResponse = await fetch(
-    'https://api.github.com/users/bruno-valero',
-    {
-      next: {
-        revalidate: 60 * 10, // 10 minutes
-      },
-      headers: [['Authorization', `Bearer ${envBackend.GITHUB_AUTH_TOKEN}`]],
-    },
-  )
+interface ProfileProps {
+  developer: GitHubUserResponse | undefined
+}
 
-  const developer = (await developerResponse.json()) as
-    | GitHubUserResponse
-    | undefined
-
+export async function Profile({ developer }: ProfileProps) {
   return (
     <MainCard>
       <CardHeader className="m-0 p-0">
