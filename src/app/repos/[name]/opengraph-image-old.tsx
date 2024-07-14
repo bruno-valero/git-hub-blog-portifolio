@@ -3,20 +3,23 @@ import { ImageResponse } from 'next/og'
 import { Repo } from '@/api/github/classes/repos'
 import { GitHubReposResponse } from '@/api/github/repos-request'
 import { GitHubUserResponse } from '@/api/github/user-request'
-import { ServerProps } from '@/app/page'
 import { OpenGraphRepoHeader } from '@/components/open-graph/open-graph-repo-header'
 import { envBackend } from '@/env-backend'
 
-export const runtime = 'edge'
+import { ServerProps } from '../../page'
 
-export const alt = 'About Acme'
-export const size = {
-  width: 1200,
-  height: 630,
-}
-export const contentType = 'image/png'
+export const revalidate = 60 * 10 // 10 minutes
 
-export default async function Image(props: ServerProps) {
+type GenerateImageMetadataResp = {
+  id: string
+  alt: string
+  size: { width: number; height: number }
+  contentType: string
+}[]
+
+export async function generateImageMetadata(
+  props: ServerProps,
+): Promise<GenerateImageMetadataResp> {
   const user = 'bruno-valero'
   const { name } = props.params
 
@@ -29,6 +32,20 @@ export default async function Image(props: ServerProps) {
 
   const repoData = (await repoResp.json()) as GitHubReposResponse[number]
 
+  const repo = new Repo(repoData)
+
+  const imageMetadata: GenerateImageMetadataResp[number] = {
+    id: JSON.stringify(repo),
+    size: { width: 896, height: 220 },
+    alt: repo.name,
+    contentType: 'image/png',
+  }
+
+  return [imageMetadata]
+}
+
+export default async function Image({ params }: { params: { id: string } }) {
+  const repoData = JSON.parse(params.id) as GitHubReposResponse[number]
   const repo = new Repo(repoData)
 
   if (!repo) return new Response('failed to generate og', { status: 500 })
@@ -55,7 +72,8 @@ export default async function Image(props: ServerProps) {
       />
     ),
     {
-      ...size,
+      width: 1200,
+      height: 630,
     },
   )
 }

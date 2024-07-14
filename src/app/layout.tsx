@@ -35,8 +35,9 @@ export const metadata: Metadata = {
     'next js',
   ],
   openGraph: {
-    description: 'Sites e sistemas para web',
-    title: 'Bruno Valero',
+    description:
+      'Veja as aplicações desenvolvidas e publicadas por Bruno Fernandes Valero. Desde ReactJS e NextJS à APIs NodeJS com Fastify e NextJS',
+    title: 'Bruno Valero - Desenvolvimento web do front-end até o back-end',
   },
 }
 

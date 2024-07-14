@@ -15,6 +15,10 @@ export async function generateMetadata(props: ServerProps) {
   const user = 'bruno-valero'
   const { name: repo, issueId } = props.params
 
+  if (!repo) {
+    notFound()
+  }
+
   const resp = await fetch(
     `https://api.github.com/repos/${user}/${repo}/issues/${issueId}`,
     {
@@ -35,9 +39,15 @@ export async function generateMetadata(props: ServerProps) {
   if (!issue.content) {
     notFound()
   }
-  console.log('issue.content - data', issue.content)
+  console.log(
+    'metadataBase',
+    `${envBackend.BASE_URL}/repos/${repo}/issues/${issueId}`,
+  )
 
   const metadata: Metadata = {
+    metadataBase: new URL(
+      `${envBackend.BASE_URL}/repos/${repo}/issues/${issueId}`,
+    ),
     title: issue.data.title,
     description: issue.content
       .replaceAll(/\]\(.+\)|\[/g, '')
@@ -51,6 +61,13 @@ export async function generateMetadata(props: ServerProps) {
     ],
     creator: formatNameFromSlug(issue.data.user.login),
     keywords: [formatNameFromSlug(issue.data.title)],
+    openGraph: {
+      description: issue.content
+        .replaceAll(/\]\(.+\)|\[/g, '')
+        .slice(0, 150)
+        .concat(' ...'),
+      title: `${issue.data.title} - Issue do repositório ${formatNameFromSlug(repo)}`,
+    },
   }
   return metadata
 }
