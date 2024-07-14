@@ -41,7 +41,7 @@ export async function generateMetadata(props: ServerProps) {
   )
 
   const metadata: Metadata = {
-    metadataBase: new URL(`${envBackend.BASE_URL}/repos/${repo}`),
+    metadataBase: new URL(`${envBackend.BASE_URL}`),
     title: repo.name,
     description: repo.data.description
       ? formatMarkdownToText(repo.data.description).slice(0, 150).concat(' ...')
