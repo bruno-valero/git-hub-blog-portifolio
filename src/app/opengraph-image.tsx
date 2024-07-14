@@ -41,5 +41,20 @@ export async function generateImageMetadata(): Promise<GenerateImageMetadataResp
 export default async function Image({ params }: { params: { id: string } }) {
   const developer = JSON.parse(params.id) as GitHubUserResponse | undefined
 
-  return new ImageResponse(<Profile developer={developer} />)
+  const nunitoSemiBold = fetch(
+    new URL('./Nunito-SemiBold.ttf', import.meta.url),
+  ).then((res) => res.arrayBuffer())
+
+  return new ImageResponse(<Profile developer={developer} />, {
+    height: 220,
+    width: 864,
+    fonts: [
+      {
+        name: 'Nunito',
+        data: await nunitoSemiBold,
+        style: 'normal',
+        weight: 400,
+      },
+    ],
+  })
 }

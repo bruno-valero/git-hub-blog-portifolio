@@ -49,5 +49,20 @@ export default async function Image({ params }: { params: { id: string } }) {
   const issueData = JSON.parse(params.id) as GitHubReposIssuesResponse[number]
   const issue = new Issue(issueData)
 
-  return new ImageResponse(<IssueHeader issue={issue} />)
+  const nunitoSemiBold = fetch(
+    new URL('./Nunito-SemiBold.ttf', import.meta.url),
+  ).then((res) => res.arrayBuffer())
+
+  return new ImageResponse(<IssueHeader issue={issue} />, {
+    height: 220,
+    width: 864,
+    fonts: [
+      {
+        name: 'Nunito',
+        data: await nunitoSemiBold,
+        style: 'normal',
+        weight: 400,
+      },
+    ],
+  })
 }
