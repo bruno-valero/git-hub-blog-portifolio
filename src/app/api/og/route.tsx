@@ -7,15 +7,6 @@ import { envBackend } from '@/env-backend'
 // Route segment config
 export const runtime = 'edge'
 
-// Image metadata
-export const alt = 'About Acme'
-export const size = {
-  width: 1200,
-  height: 630,
-}
-
-export const contentType = 'image/png'
-
 // Image generation
 export async function GET() {
   const developerResponse = await fetch(
@@ -31,13 +22,6 @@ export async function GET() {
   const developer = (await developerResponse.json()) as
     | GitHubUserResponse
     | undefined
-
-  // const imageMetadata: GenerateImageMetadataResp[number] = {
-  //   id: JSON.stringify(developer),
-  //   size: { width: 896, height: 220 },
-  //   alt: 'Bruno Valero',
-  //   contentType: 'image/png',
-  // }
 
   if (!developer) return new Response('failed to generate og', { status: 500 })
 
@@ -55,6 +39,9 @@ export async function GET() {
     {
       width: 1200,
       height: 630,
+      headers: {
+        'Content-Type': 'image/png',
+      },
     },
   )
 }
