@@ -49,5 +49,8 @@ export default async function Image({ params }: { params: { id: string } }) {
   const issueData = JSON.parse(params.id) as GitHubReposIssuesResponse[number]
   const issue = new Issue(issueData)
 
-  return new ImageResponse(<IssueHeader issue={issue} />)
+  return new ImageResponse(<IssueHeader issue={issue} />, {
+    height: 220,
+    width: 864,
+  })
 }

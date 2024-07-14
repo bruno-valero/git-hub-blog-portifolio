@@ -41,5 +41,8 @@ export async function generateImageMetadata(): Promise<GenerateImageMetadataResp
 export default async function Image({ params }: { params: { id: string } }) {
   const developer = JSON.parse(params.id) as GitHubUserResponse | undefined
 
-  return new ImageResponse(<Profile developer={developer} />)
+  return new ImageResponse(<Profile developer={developer} />, {
+    height: 220,
+    width: 864,
+  })
 }

@@ -51,15 +51,6 @@ export async function generateMetadata(props: ServerProps) {
     ],
     creator: formatNameFromSlug(issue.data.user.login),
     keywords: [formatNameFromSlug(issue.data.title)],
-    openGraph: {
-      authors: [formatNameFromSlug(issue.data.user.login)],
-      creators: [formatNameFromSlug(issue.data.user.login)],
-      description: issue.content
-        .replaceAll(/\]\(.+\)|\[/g, '')
-        .slice(0, 150)
-        .concat(' ...'),
-      url: `${envBackend.BASE_URL}/issue?user=${user}&repo=${repo}&issueId=${issueId}`,
-    },
   }
   return metadata
 }

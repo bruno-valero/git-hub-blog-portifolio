@@ -50,15 +50,6 @@ export async function generateMetadata(props: ServerProps) {
     ],
     creator: formatNameFromSlug(repo.data.owner.login),
     keywords: [repo.name],
-    openGraph: {
-      authors: [formatNameFromSlug(repo.data.owner.login)],
-      creators: [formatNameFromSlug(repo.data.owner.login)],
-      description: repo.data.description
-        ?.replaceAll(/\]\(.+\)|\[/g, '')
-        .slice(0, 150)
-        .concat(' ...'),
-      url: `${envBackend.BASE_URL}/repo?name=${repo.data.name}&user=${user}`,
-    },
   }
   return metadata
 }
