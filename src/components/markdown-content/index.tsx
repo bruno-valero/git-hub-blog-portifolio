@@ -10,6 +10,7 @@ import remarkMath from 'remark-math'
 import { Link } from '@/components/link'
 import { Checkbox } from '@/components/ui/checkbox'
 
+import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import { ButtonCopyToClipboard } from './button-copy-to-clipboard'
 
 interface MarkdownContentProps {
@@ -36,7 +37,7 @@ export function MarkdownContent({ data }: MarkdownContentProps) {
             </span>
           ),
           p: (props) => (
-            <p {...props} className="my-1 text-wrap text-16 text-base-text" />
+            <p {...props} className="my-4 text-wrap text-16 text-base-text" />
           ),
           span: (props) => (
             <span
@@ -104,7 +105,7 @@ export function MarkdownContent({ data }: MarkdownContentProps) {
             return (
               <>
                 {match ? (
-                  <div className="relative my-4">
+                  <ScrollArea className="relative my-4 pb-1">
                     <ButtonCopyToClipboard data={String(children)} />
                     <SyntaxHighlighter
                       {...rest}
@@ -121,7 +122,8 @@ export function MarkdownContent({ data }: MarkdownContentProps) {
                     >
                       {String(children).replace(/\n$/, '')}
                     </SyntaxHighlighter>
-                  </div>
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
                 ) : (
                   <code {...rest} className={className}>
                     {children}
